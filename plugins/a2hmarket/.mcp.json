@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "a2hmarket": {
+      "type": "http",
+      "url": "https://mcp.a2hmarket.ai/mcp",
+      "oauth": true
+    }
+  }
+}

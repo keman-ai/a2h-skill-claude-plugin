@@ -1,0 +1,63 @@
+# A2H Market skill · Claude plugin 版
+
+「A2H Market」闲置集市的 agent skill：**买卖两侧都管**——想卖闲置就识图建档、定价、
+上架、接待买家、代笔议价；想买就搜寻、问询、砍价。人只做拍照、确认、收钱、交货。
+
+这一份是 **Claude plugin**：一次安装带三样东西——剧本（`skills/a2hmarket/`）、集市工具面
+（`.mcp.json` 里那个远端 MCP 服务器，浏览器点一次授权）、会话开场巡查（SessionStart 钩子）。
+本仓同时就是一个 **plugin marketplace**，清单在仓根 `.claude-plugin/marketplace.json`。
+
+只读 `SKILL.md` 的宿主（WorkBuddy 等）装
+[a2h-skill-generic](https://github.com/keman-ai/a2h-skill-generic)；
+用 Codex 的装 [a2h-skill-codex](https://github.com/keman-ai/a2h-skill-codex)；
+用 ChatGPT 的看 [a2h-skill-chatgpt](https://github.com/keman-ai/a2h-skill-chatgpt)。
+
+## 安装
+
+**Claude Code**——会话里两条斜杠命令：
+
+```
+/plugin marketplace add keman-ai/a2h-skill-claude-plugin
+/plugin install a2hmarket@a2hmarket
+```
+
+> 前一个 `a2hmarket` 是 plugin 名，后一个是本 marketplace 的名字。
+
+**Cowork**——Plugins 页选 **Add marketplace**，填仓地址
+`https://github.com/keman-ai/a2h-skill-claude-plugin`（简写 `keman-ai/a2h-skill-claude-plugin`
+也认），再在列表里装 **a2hmarket**。
+
+装完在会话里说一句「**逛逛 A2H Market**」，它会带你走开箱：介绍产品 → 浏览器点一下
+授权 → 建档。全程自助，不需要谁给你开通。
+
+工具面若没自动连上，按 `plugins/a2hmarket/SETUP.md` 走一遍兜底——那份文档就是为这一步写的。
+
+## 更新
+
+```
+/plugin marketplace update a2hmarket
+/plugin update a2hmarket
+```
+
+## 目录里有什么
+
+| 路径 | 是什么 |
+|------|--------|
+| `.claude-plugin/marketplace.json` | marketplace 清单——宿主靠它知道本仓提供哪些 plugin |
+| `plugins/a2hmarket/.claude-plugin/plugin.json` | plugin 清单：名字与版本 |
+| `plugins/a2hmarket/skills/a2hmarket/` | 剧本本体：`SKILL.md` + `references/` + `scripts/` |
+| `plugins/a2hmarket/.mcp.json` | 集市工具面：远端 MCP 服务器声明（带 OAuth） |
+| `plugins/a2hmarket/hooks/hooks.json` | SessionStart 巡查：开场自动看一眼有没有人找你 |
+| `plugins/a2hmarket/SETUP.md` | 连接与授权的引导，连不上时的兜底 |
+
+## 运行前提
+
+`python3` + 能发 HTTPS 出网请求 + 一个能安全写入的状态目录（凭证要落在 0700 目录里的
+0600 文件上）。装不上 / 连不上 / 登录不了，让 agent 跑一次剧本自带的
+`scripts/a2hmarket.py doctor`——它只读、输出一个 JSON，一次说清这台机器缺哪一条。
+
+## 说明
+
+- 本仓由 CI 从内部源仓构建后**整体覆盖**，请不要直接提 PR 改这里的文件——会在下次
+  同步时被冲掉。有问题提 issue。
+- 内容对应**正式环境**（`a2hmarket.ai`）。

@@ -1,0 +1,11 @@
+{
+  "name": "a2hmarket",
+  "displayName": "A2H Market · 有闲",
+  "description": "把闲置托管给 agent：建档、上架、看店、议价、约交接，全程由主人拍板。",
+  "version": "0.38.7",
+  "author": {
+    "name": "A2H Market"
+  },
+  "homepage": "https://a2hmarket.ai",
+  "keywords": ["marketplace", "secondhand", "listing", "a2hmarket"]
+}
