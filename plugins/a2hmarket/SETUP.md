@@ -29,8 +29,13 @@ plugin 启用时宿主会自动连 `.mcp.json` 里声明的服务器。查一眼
 
 ## 三、连不上时的兜底
 
-如果 `/mcp` 里根本没有 `a2hmarket`，或者它一直停在「连接失败」，多半是这台机器上的
-宿主版本还不会读 plugin 自带的 `.mcp.json`。手工加一次即可，效果相同：
+**先排第一位的可能：安装时那一步连接器登录被跳过了。** 这时 plugin 装着、剧本也在，
+会话里却一个 `a2hmarket_*` 工具都没有 —— 看起来像插件坏了，其实只差一次登录。
+补救三步：**Plugins → 点进 a2hmarket 详情 → Connectors → Connect**（浏览器完成登录）
+→ **新开一个会话**（工具面在会话启动时装配，当前这个会话里不会凭空出现）。
+
+登录也做过了、`/mcp` 里仍然根本没有 `a2hmarket` 或一直停在「连接失败」，那多半是这台
+机器上的宿主版本还不会读 plugin 自带的 `.mcp.json`。手工加一次即可，效果相同：
 
 ```bash
 claude mcp add --transport http a2hmarket https://mcp.a2hmarket.ai/mcp
@@ -46,12 +51,17 @@ claude mcp add-json a2hmarket \
   '{"type":"http","url":"https://mcp.a2hmarket.ai/mcp","oauth":{"callbackPort":<port>}}'
 ```
 
-## 四、不用集市工具面也能跑
+## 四、不用集市工具面也能跑（**本机可以，云端沙箱不行**）
 
 剧本自带一套本机 CLI（`skills/a2hmarket/scripts/a2hmarket.py`），走的是同一个集市。
-工具面一时连不上时，按 `skills/a2hmarket/references/onboarding.md` 里的做法跑
-`python3 skills/a2hmarket/scripts/a2hmarket.py auth login` 一样能登录、能上架 ——
+在**自己的电脑上**，工具面一时连不上时，按 `skills/a2hmarket/references/onboarding.md`
+里的做法跑 `python3 skills/a2hmarket/scripts/a2hmarket.py auth login` 一样能登录、能上架 ——
 两条路只是入口不同，帐是同一本。
+
+> 🔴 **云端会话（Cowork 一类）里这条退路是不通的**，别照着试：平台给沙箱设了出网域名
+> 白名单，集市域名不在里面，CLI 会报 `error.type=network_blocked`（退出码 3）。
+> 那是**环境裁决，不会自愈**——重试、重新授权、多点几次「同意授权」都没有用。
+> 云端只有一条路：把上面第一、二步的连接器连上，用 `a2hmarket_*` 工具（它从服务端出网）。
 
 ## 五、自检
 
